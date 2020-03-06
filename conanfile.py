@@ -1,11 +1,12 @@
-from conans import ConanFile, CMake, tools
+from conans import ConanFile, CMake
 
-class DDSConan(ConanFile):
+class CollectionConan(ConanFile):
     name = "collection"
     version = "latest"
-    license = "MIT"
-    url = "https://github.com/Gundoll/collection.git"
-    description = "Data structure & algorithm collections written in C"
+    license = "Proprietary"
+    url = "https://github.com/Gundoll/collection"
+    description = "Collection of C Data Structures"
+
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = "shared=False"
@@ -18,3 +19,13 @@ class DDSConan(ConanFile):
         cmake = CMake(self)
         cmake.configure(source_folder="collection")
         cmake.build()
+
+    def package(self):
+        self.copy("*.dll", dst="lib", keep_path=False)
+        self.copy("*.h", dst="include/collection", src="collection", excludes="build*")
+        self.copy("*.so", dst="lib", keep_path=False)
+        self.copy("*.dylib", dst="lib", keep_path=False)
+        self.copy("*.a", dst="lib", keep_path=False)
+
+    def package_info(self):
+        self.cpp_info.libs = ["collection"]
