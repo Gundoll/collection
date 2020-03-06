@@ -17,14 +17,11 @@ class CollectionConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        cmake.configure(source_folder="collection")
+        cmake.configure(source_folder=".")
         cmake.build()
 
     def package(self):
-        self.copy("*.dll", dst="lib", keep_path=False)
-        self.copy("*.h", dst="include/collection", src="collection", excludes="build*")
-        self.copy("*.so", dst="lib", keep_path=False)
-        self.copy("*.dylib", dst="lib", keep_path=False)
+        self.copy("*.h", dst="include/collection", src=".", excludes="build*")
         self.copy("*.a", dst="lib", keep_path=False)
 
     def package_info(self):
