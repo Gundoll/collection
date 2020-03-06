@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(collection VERSION 1.0.0 LANGUAGES C)
-set(PROEJCT_DESCRIPTION "Data structure collections which written in C")
+set(PROEJCT_DESCRIPTION "Data structure and algorithm collections written in C")
 
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE Release)
@@ -24,8 +24,8 @@ endif()
 add_definitions(-DARCH_WORDSIZE=${CMAKE_SIZEOF_VOID_P})
 
 # Build settings
-include_directories("${PROJECT_SOURCE_DIR}")
-set(sources base.c queue.c)
+include_directories("${PROJECT_SOURCE_DIR}/include")
+set(sources src/base.c src/queue.c)
 
 add_library(objs OBJECT ${sources})
 set_property(TARGET objs PROPERTY POSITION_INDEPENDENT_CODE 1)

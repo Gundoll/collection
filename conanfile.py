@@ -5,7 +5,7 @@ class CollectionConan(ConanFile):
     version = "latest"
     license = "Proprietary"
     url = "https://github.com/Gundoll/collection"
-    description = "Collection of C Data Structures"
+    description = "Collection of data structures and algorithms"
 
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
@@ -21,7 +21,7 @@ class CollectionConan(ConanFile):
         cmake.build()
 
     def package(self):
-        self.copy("*.h", dst="include/collection", src=".", excludes="build*")
+        self.copy("*.h", dst="include/collection", src="include", excludes="build*")
         self.copy("*.a", dst="lib", keep_path=False)
 
     def package_info(self):
