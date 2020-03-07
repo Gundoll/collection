@@ -25,9 +25,12 @@ add_definitions(-DARCH_WORDSIZE=${CMAKE_SIZEOF_VOID_P})
 
 # Build settings
 include_directories("${PROJECT_SOURCE_DIR}/include")
-set(sources src/base.c src/queue.c)
+set(SOURCES
+	src/base.c
+	src/collection.c
+	src/queue.c)
 
-add_library(objs OBJECT ${sources})
+add_library(objs OBJECT ${SOURCES})
 set_property(TARGET objs PROPERTY POSITION_INDEPENDENT_CODE 1)
 
 add_library(collection $<TARGET_OBJECTS:objs>)

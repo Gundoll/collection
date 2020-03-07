@@ -14,11 +14,18 @@ typedef enum {
 	RETCODE_INVALID_ARGS,
 	RETCODE_NOT_ENOUGH_RESOURCES,
 	RETCODE_DENIED_DUE_TO_LIMIT,
+	RETCODE_UNSUPPORTED_FUNCTION
 } RetCode_t;
 
+typedef enum {
+	CONTEXT_TYPE_POINTER,
+	CONTEXT_TYPE_VALUE
+} ContextType;
+
 struct Context {
-	int32_t (*compare)(void* lValue, void* rValue);
-	size_t contextSize;
+	int32_t		(*compare)(void* lValue, void* rValue);
+	ContextType	contextType;
+	size_t		contextSize;
 };
 
 void	printRetCode(RetCode_t retCode);
