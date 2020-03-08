@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "queue.h"
 
 static RetCode_t push(void* self, uint64_t element) {
@@ -69,12 +70,30 @@ static uint64_t	get(void* self, uint32_t index) {
 	return NULL;
 }
 
-static RetCode_t remove(void* self, uint64_t element) {
+static RetCode_t queueRemove(void* self, uint64_t element) {
 	return RETCODE_UNSUPPORTED_FUNCTION;
 }
 
 static RetCode_t clear(void* self) {
 	return RETCODE_OK;
+}
+
+static void dump(void* self) {
+	struct GDQueue* queue = (struct GDQueue*)self;
+	if(self == NULL)
+		return;
+
+	printf("struct GDQueue {\n");
+	printf("\tsize: %ld", queue->size);
+	printf("\tcapacity: %ld", queue->capacity);
+	printf("\tcapacityLimit: %ld", queue->capacityLimit);
+	printf("\thead: %d\n", queue->head);
+	printf("\ttail: %d\n", queue->tail);
+	printf("\tcontext: {\n");
+	printf("\t\tcontextType: %s\n", queue->context.contextType==CONTEXT_TYPE_POINTER?"CONTEXT_TYPE_POINTER":"CONTEXT_TYPE_VALUE");
+	printf("\t\tcontextSize: %ld\n", queue->context.contextSize);
+	printf("\t}\n");
+	printf("}\n");
 }
 
 struct GDQueue* GDQueueCreate(size_t initialSize, size_t limitSize, struct Context context) {
@@ -103,10 +122,11 @@ struct GDQueue* GDQueueCreate(size_t initialSize, size_t limitSize, struct Conte
 	self->contains = contains;
 	self->add = add;
 	self->get = get;
-	self->remove = remove;
+	self->remove = queueRemove;
 	self->clear = clear;
 	self->push = push;
 	self->pop = pop;
+	self->dump = dump;
 
 error:
 	if(self) {
