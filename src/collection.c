@@ -45,6 +45,7 @@ RetCode_t GDCollectionInit(struct GDCollection* self, size_t initialSize, size_t
 	return RETCODE_OK;
 
 error:
+	printf("[ERROR (%02d)] %s in %s", ret, __FUNCTION__, __FILE__);
 	return ret;
 }
 

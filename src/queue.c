@@ -83,17 +83,28 @@ static void dump(void* self) {
 	if(self == NULL)
 		return;
 
-	printf("struct GDQueue {\n");
-	printf("\tsize: %ld", queue->size);
-	printf("\tcapacity: %ld", queue->capacity);
-	printf("\tcapacityLimit: %ld", queue->capacityLimit);
+	printf("struct GDQueue(%p) {\n", self);
+	printf("\tsize: %ld\n", queue->size);
+	printf("\tcapacity: %ld\n", queue->capacity);
+	printf("\tcapacityLimit: %ld\n", queue->capacityLimit);
 	printf("\thead: %d\n", queue->head);
 	printf("\ttail: %d\n", queue->tail);
 	printf("\tcontext: {\n");
 	printf("\t\tcontextType: %s\n", queue->context.contextType==CONTEXT_TYPE_POINTER?"CONTEXT_TYPE_POINTER":"CONTEXT_TYPE_VALUE");
 	printf("\t\tcontextSize: %ld\n", queue->context.contextSize);
 	printf("\t}\n");
+	printf("\tqueue(HEX):");
+	for(int i = 0; i < queue->capacity * queue->context.contextSize; i++) {
+		if(i % 8 == 0)
+			printf("\n\t[%04X]  ", i);
+		else if(i > 0 && i % 4 == 0)
+			printf(" ");
+
+		printf("%02X ", ((char*)queue->queue)[i]);
+	}
+	printf("\n");
 	printf("}\n");
+
 }
 
 struct GDQueue* GDQueueCreate(size_t initialSize, size_t limitSize, struct Context context) {
@@ -127,6 +138,8 @@ struct GDQueue* GDQueueCreate(size_t initialSize, size_t limitSize, struct Conte
 	self->push = push;
 	self->pop = pop;
 	self->dump = dump;
+
+	return self;
 
 error:
 	if(self) {
