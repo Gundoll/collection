@@ -100,7 +100,7 @@ static void dump(void* self) {
 		else if(i > 0 && i % 4 == 0)
 			printf(" ");
 
-		printf("%02X ", ((char*)queue->queue)[i]);
+		printf("%02X ", ((uint8_t*)queue->queue)[i]);
 	}
 	printf("\n");
 	printf("}\n");
