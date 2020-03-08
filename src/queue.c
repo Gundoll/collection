@@ -20,7 +20,7 @@ static RetCode_t GDQueuePush(void* self, uintptr_t element) {
 	if(queue->context.contextType == CONTEXT_TYPE_POINTER)
 		((uintptr_t*)(queue->queue))[queue->tail] = element;
 	else if(queue->context.contextType == CONTEXT_TYPE_VALUE)
-		memcpy(queue->queue + (queue->tail * queue->context.contextSize), element, queue->context.contextSize);
+		memcpy(queue->queue + (queue->tail * queue->context.contextSize), (void*)element, queue->context.contextSize);
 
 	queue->tail = (queue->tail + 1) % queue->capacityLimit;
 	queue->size++;
@@ -29,6 +29,27 @@ static RetCode_t GDQueuePush(void* self, uintptr_t element) {
 }
 
 static uintptr_t GDQueuePop(void* self) {
+	if(self == NULL)
+		return 0;
+
+	struct GDQueue* queue = (struct GDQueue*)self;
+	if(queue->size <= 0)
+		return 0;
+
+	uintptr_t ret = 0;
+	if(queue->context.contextType == CONTEXT_TYPE_POINTER)
+		ret = (uintptr_t)(queue->queue + (queue->head * sizeof(void*)));
+	else {
+		ret = (uintptr_t)malloc(queue->context.contextSize);
+		if(ret == 0)
+			return 0;
+		memcpy((void*)ret, queue->queue + (queue->head * queue->context.contextSize), queue->context.contextSize);
+	}
+
+	queue->head = (queue->head + 1) % queue->capacityLimit;
+	queue->size--;
+
+	return ret;
 }
 
 static RetCode_t GDQueueIsEmpty(void* self) {
@@ -51,9 +72,9 @@ static RetCode_t GDQueueContains(void* self, uintptr_t element) {
 
 	uint32_t index = queue->head;
 	for(int cnt = 0; cnt < queue->size; cnt++) {
-		if(queue->context.contextType == CONTEXT_TYPE_POINTER && queue->context.compare(queue->queue + (index * queue->context.contextSize), element) == 0)
+		if(queue->context.contextType == CONTEXT_TYPE_POINTER && queue->context.compare(queue->queue + (index * queue->context.contextSize), (void*)element) == 0)
 			return RETCODE_OK;
-		else if(queue->context.contextType == CONTEXT_TYPE_VALUE && queue->context.compare(queue->queue + (index * queue->context.contextSize), element) == 0)
+		else if(queue->context.contextType == CONTEXT_TYPE_VALUE && queue->context.compare(queue->queue + (index * queue->context.contextSize), (void*)element) == 0)
 			return RETCODE_OK;
 		else
 			index = (index + 1) % queue->capacityLimit;
