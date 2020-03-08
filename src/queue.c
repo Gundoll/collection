@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "queue.h"
 
-static RetCode_t push(void* self, uint64_t element) {
+static RetCode_t GDQueuePush(void* self, uintptr_t element) {
 	if(self == NULL)
 		return RETCODE_INVALID_ARGS;
 
@@ -28,10 +28,10 @@ static RetCode_t push(void* self, uint64_t element) {
 	return RETCODE_OK;
 }
 
-static uint64_t pop(void* self) {
+static uintptr_t GDQueuePop(void* self) {
 }
 
-static RetCode_t isEmpty(void* self) {
+static RetCode_t GDQueueIsEmpty(void* self) {
 	struct GDQueue* queue = (struct GDQueue*)self;
 	if(queue == NULL)
 		return RETCODE_INVALID_ARGS;
@@ -41,7 +41,7 @@ static RetCode_t isEmpty(void* self) {
 		return RETCODE_OK;
 }
 
-static RetCode_t contains(void* self, uint64_t element) {
+static RetCode_t GDQueueContains(void* self, uintptr_t element) {
 	if(self == NULL)
 		return RETCODE_INVALID_ARGS;
 
@@ -62,23 +62,23 @@ static RetCode_t contains(void* self, uint64_t element) {
 	return RETCODE_ERROR;
 }
 
-static RetCode_t add(void* self, uint64_t element) {
-	return push(self, element);
+static RetCode_t GDQueueAdd(void* self, uintptr_t element) {
+	return GDQueuePush(self, element);
 }
 
-static uint64_t	get(void* self, uint32_t index) {
-	return NULL;
+static uintptr_t GDQueueGet(void* self, uint32_t index) {
+	return 0;
 }
 
-static RetCode_t queueRemove(void* self, uint64_t element) {
+static RetCode_t GDQueueRemove(void* self, uintptr_t element) {
 	return RETCODE_UNSUPPORTED_FUNCTION;
 }
 
-static RetCode_t clear(void* self) {
+static RetCode_t GDQueueClear(void* self) {
 	return RETCODE_OK;
 }
 
-static void dump(void* self) {
+static void GDQueueDump(void* self) {
 	struct GDQueue* queue = (struct GDQueue*)self;
 	if(self == NULL)
 		return;
@@ -129,15 +129,15 @@ struct GDQueue* GDQueueCreate(size_t initialSize, size_t limitSize, struct Conte
 	self->head = 0;
 	self->tail = 0;
 
-	self->isEmpty = isEmpty;
-	self->contains = contains;
-	self->add = add;
-	self->get = get;
-	self->remove = queueRemove;
-	self->clear = clear;
-	self->push = push;
-	self->pop = pop;
-	self->dump = dump;
+	self->isEmpty = GDQueueIsEmpty;
+	self->contains = GDQueueContains;
+	self->add = GDQueueAdd;
+	self->get = GDQueueGet;
+	self->remove = GDQueueRemove;
+	self->clear = GDQueueClear;
+	self->push = GDQueuePush;
+	self->pop = GDQueuePop;
+	self->dump = GDQueueDump;
 
 	return self;
 

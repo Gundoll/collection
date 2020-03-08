@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "collection.h"
 
 struct GDCollection* GDCollectionCreate(size_t initialSize, size_t limitSize, struct Context context) {
