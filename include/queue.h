@@ -6,7 +6,7 @@
 struct GDQueue {
 	GD_COLLECTION_PROPS
 	RetCode_t	(*push)(void* self, uintptr_t element);
-	uintptr_t	(*pop)(void* self);
+	RetCode_t	(*pop)(void* self, void* value);
 	void		(*dump)(void* self);
 	int32_t		head;
 	int32_t		tail;

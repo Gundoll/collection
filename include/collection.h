@@ -7,9 +7,11 @@
 	RetCode_t	(*isEmpty)(void* self); \
 	RetCode_t	(*contains)(void* self, uintptr_t element); \
 	RetCode_t	(*add)(void* self, uintptr_t element); \
-	uintptr_t	(*get)(void* self, uint32_t index); \
+	RetCode_t	(*get)(void* self, uint32_t index, void* value); \
 	RetCode_t	(*remove)(void* self, uintptr_t element); \
-	RetCode_t	(*clear)(void* self);
+	RetCode_t	(*removeAll)(void* self); \
+	RetCode_t	(*purge)(void* self, uintptr_t element); \
+	RetCode_t	(*purgeAll)(void* self);
 
 #define GD_COLLECTION_PROPS \
 	GD_COLLECTION_API \

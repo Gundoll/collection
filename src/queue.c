@@ -28,28 +28,20 @@ static RetCode_t GDQueuePush(void* self, uintptr_t element) {
 	return RETCODE_OK;
 }
 
-static uintptr_t GDQueuePop(void* self) {
-	if(self == NULL)
-		return 0;
+static RetCode_t GDQueuePop(void* self, void* value) {
+	if(self == NULL || value == NULL)
+		return RETCODE_INVALID_ARGS;
 
 	struct GDQueue* queue = (struct GDQueue*)self;
 	if(queue->size <= 0)
-		return 0;
+		return RETCODE_EMPTY;
 
-	uintptr_t ret = 0;
-	if(queue->context.contextType == CONTEXT_TYPE_POINTER)
-		ret = (uintptr_t)(queue->queue + (queue->head * sizeof(void*)));
-	else {
-		ret = (uintptr_t)malloc(queue->context.contextSize);
-		if(ret == 0)
-			return 0;
-		memcpy((void*)ret, queue->queue + (queue->head * queue->context.contextSize), queue->context.contextSize);
-	}
+	memcpy(value, queue->queue + (queue->head * queue->context.contextSize), queue->context.contextSize);
 
 	queue->head = (queue->head + 1) % queue->capacityLimit;
 	queue->size--;
 
-	return ret;
+	return RETCODE_OK;
 }
 
 static RetCode_t GDQueueIsEmpty(void* self) {
@@ -87,7 +79,7 @@ static RetCode_t GDQueueAdd(void* self, uintptr_t element) {
 	return GDQueuePush(self, element);
 }
 
-static uintptr_t GDQueueGet(void* self, uint32_t index) {
+static RetCode_t GDQueueGet(void* self, uint32_t index, void* value) {
 	return 0;
 }
 
@@ -95,7 +87,15 @@ static RetCode_t GDQueueRemove(void* self, uintptr_t element) {
 	return RETCODE_UNSUPPORTED_FUNCTION;
 }
 
-static RetCode_t GDQueueClear(void* self) {
+static RetCode_t GDQueueRemoveAll(void* self) {
+	return RETCODE_OK;
+}
+
+static RetCode_t GDQueuePurge(void* self, uintptr_t element) {
+	return RETCODE_OK;
+}
+
+static RetCode_t GDQueuePurgeAll(void* self) {
 	return RETCODE_OK;
 }
 
@@ -155,7 +155,9 @@ struct GDQueue* GDQueueCreate(size_t initialSize, size_t limitSize, struct Conte
 	self->add = GDQueueAdd;
 	self->get = GDQueueGet;
 	self->remove = GDQueueRemove;
-	self->clear = GDQueueClear;
+	self->removeAll = GDQueueRemoveAll;
+	self->purge = GDQueuePurge;
+	self->purgeAll = GDQueuePurgeAll;
 	self->push = GDQueuePush;
 	self->pop = GDQueuePop;
 	self->dump = GDQueueDump;
