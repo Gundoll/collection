@@ -80,7 +80,7 @@ static RetCode_t GDQueueAdd(void* self, uintptr_t element) {
 }
 
 static RetCode_t GDQueueGet(void* self, uint32_t index, void* value) {
-	return 0;
+	return RETCODE_UNSUPPORTED_FUNCTION;
 }
 
 static RetCode_t GDQueueRemove(void* self, uintptr_t element) {
@@ -88,14 +88,44 @@ static RetCode_t GDQueueRemove(void* self, uintptr_t element) {
 }
 
 static RetCode_t GDQueueRemoveAll(void* self) {
+	struct GDQueue* queue = (struct GDQueue*)self;
+
+	if(self == NULL) {
+		return RETCODE_INVALID_ARGS;
+	}
+
+	queue->size = 0;
+	queue->head = 0;
+	queue->tail = 0;
+
 	return RETCODE_OK;
 }
 
 static RetCode_t GDQueuePurge(void* self, uintptr_t element) {
-	return RETCODE_OK;
+	return RETCODE_UNSUPPORTED_FUNCTION;
 }
 
 static RetCode_t GDQueuePurgeAll(void* self) {
+	printf("%s\n", __FUNCTION__);
+	struct GDQueue* queue = (struct GDQueue*)self;
+
+	if(self == NULL) {
+		return RETCODE_INVALID_ARGS;
+	}
+
+	if(queue->context.contextType == CONTEXT_TYPE_POINTER) {
+		int i = 0;
+		for(i = 0; i < queue->size; i++) {
+			void** ptr = queue->queue + (((queue->head + i) % queue->capacityLimit) * queue->context.contextSize);
+			if(ptr)
+				free(*ptr);
+		}
+	}
+
+	queue->size = 0;
+	queue->head = 0;
+	queue->tail = 0;
+
 	return RETCODE_OK;
 }
 
