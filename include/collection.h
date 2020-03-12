@@ -3,6 +3,8 @@
 
 #include "base.h"
 
+#define GD_COLLECTION_SIZE_MAX 0xFFFFFFFFFFFFFFFF
+
 #define GD_COLLECTION_API \
 	RetCode_t	(*isEmpty)(void* self); \
 	RetCode_t	(*contains)(void* self, uintptr_t element); \

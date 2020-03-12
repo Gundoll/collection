@@ -1,5 +1,5 @@
-#ifndef __GJ_QUEUE_H__
-#define __GJ_QUEUE_H__
+#ifndef __GD_QUEUE_H__
+#define __GD_QUEUE_H__
 
 #include "collection.h"
 

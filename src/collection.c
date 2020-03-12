@@ -40,7 +40,10 @@ RetCode_t GDCollectionInit(struct GDCollection* self, size_t initialSize, size_t
 	// Step 03: attribute setting
 	self->size = 0;
 	self->capacity = initialSize;
-	self->capacityLimit = limitSize;
+	if(limitSize == 0)
+		self->capacityLimit = GD_COLLECTION_SIZE_MAX;
+	else
+		self->capacityLimit = limitSize;
 	self->context = context;
 
 	return RETCODE_OK;

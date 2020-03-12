@@ -28,7 +28,9 @@ include_directories("${PROJECT_SOURCE_DIR}/include")
 set(SOURCES
 	src/base.c
 	src/collection.c
-	src/queue.c)
+	src/queue.c
+	src/bptree.c
+	)
 
 add_library(objs OBJECT ${SOURCES})
 set_property(TARGET objs PROPERTY POSITION_INDEPENDENT_CODE 1)
