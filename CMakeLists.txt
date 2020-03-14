@@ -29,6 +29,7 @@ set(SOURCES
 	src/base.c
 	src/collection.c
 	src/queue.c
+	src/stack.c
 	src/bptree.c
 	)
 
