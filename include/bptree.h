@@ -6,7 +6,7 @@
 struct BpIndexNode {
 	bool				isLeaf;
 	void**				indices;
-	struct BpTreeNode** children;
+	struct BpIndexNode** children;
 };
 
 struct BpLeafNode {
@@ -17,8 +17,10 @@ struct BpLeafNode {
 
 struct GDBpTree {
 	GD_COLLECTION_PROPS
+	void		(*dump)(void* self);
+	void		(*elDump)(void* element);
 	size_t				degree;
-	struct BpTreeNode*	headNode;
+	struct BpIndexNode*	headNode;
 	struct BpLeafNode*	leafNode;
 };
 
