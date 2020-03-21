@@ -261,13 +261,14 @@ static void GDBpTreeInsertElement(struct GDBpTree* tree, struct BpLeafNode* node
 		newLeafNode->next = node->next;
 		node->next = newLeafNode;
 
-		// void** arr = malloc(tree->degree * sizeof(void*));
-		void* arr[4] = {};
-		memcpy(arr, node->values, tree->context.contextSize * tree->degree);
-		GDBpTreeSortedInsert(tree, tree->degree, arr, element);
+		struct BpLeafNode* tmpLeafNode;
+		BpLeafNodeCreate(&tmpLeafNode, tree->degree + 1, tree->context.contextSize);
+		memcpy(tmpLeafNode->values, node->values, tree->context.contextSize * (tree->degree - 1));
+		GDBpTreeSortedInsert(tree, tree->degree, tmpLeafNode->values, element);
+
 		memset(node->values, 0, (tree->degree - 1) * tree->context.contextSize);
-		memcpy(node->values, arr, (tree->degree / 2) * tree->context.contextSize);
-		memcpy(newLeafNode->values, &arr[tree->degree/2], (tree->degree - (tree->degree/2))* tree->context.contextSize);
+		memcpy(node->values, tmpLeafNode->values, (tree->degree / 2) * tree->context.contextSize);
+		memcpy(newLeafNode->values, &tmpLeafNode->values[tree->degree/2], (tree->degree - (tree->degree/2))* tree->context.contextSize);
 
 		if(stack) {
 			struct BpLeafNode* parent;
@@ -276,8 +277,7 @@ static void GDBpTreeInsertElement(struct GDBpTree* tree, struct BpLeafNode* node
 
 			GDBpTreeInsertIndex(tree, node/*left*/, newLeafNode/*right*/, newLeafNode->values[0]/*index*/, stack);
 		}
-		// free(arr);
-
+		BpLeafNodeDestroy(tmpLeafNode);
 	} else {
 	// Case 2: leafNode has enough space
 		GDBpTreeSortedInsert(tree, tree->degree - 1, node->values, element);
